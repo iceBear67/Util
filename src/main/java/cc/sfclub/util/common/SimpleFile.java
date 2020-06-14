@@ -15,15 +15,23 @@ public class SimpleFile {
         }
         return sb.toString();
     }
+
     @SneakyThrows
-    public static void write(String pathToFile,String context){
-        BufferedWriter bw=new BufferedWriter(new FileWriter(pathToFile));
+    public static void write(String pathToFile, String context) {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(pathToFile));
         bw.write(context);
         bw.flush();
         bw.close();
     }
-    public static boolean exists(String pathtoFIle){
-        File file=new File(pathtoFIle);
+
+    public static boolean exists(String pathtoFIle) {
+        File file = new File(pathtoFIle);
         return file.exists();
+    }
+
+    @SneakyThrows
+    public static boolean touch(String pathtoFIle) {
+        File file = new File(pathtoFIle);
+        return file.createNewFile();
     }
 }
