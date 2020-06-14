@@ -2,10 +2,7 @@ package cc.sfclub.util.common;
 
 import lombok.SneakyThrows;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 
 public class SimpleFile {
     @SneakyThrows
@@ -24,5 +21,9 @@ public class SimpleFile {
         bw.write(context);
         bw.flush();
         bw.close();
+    }
+    public static boolean exists(String pathtoFIle){
+        File file=new File(pathtoFIle);
+        return file.exists();
     }
 }
