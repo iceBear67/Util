@@ -5,10 +5,14 @@ import lombok.SneakyThrows;
 
 public class JsonConfig {
     private transient String root;
+
     public JsonConfig(String rootDir) {
         root = rootDir;
     }
 
+    /**
+     * @return fileName
+     */
     public String getConfigName() {
         return "config.json";
     }
@@ -30,5 +34,16 @@ public class JsonConfig {
         JsonConfig pluginConfig = Util.getGson().fromJson(confText, this.getClass());
         pluginConfig.root = root;
         return pluginConfig;
+    }
+
+    /**
+     * Save if file not exists
+     */
+    public JsonConfig saveDefaultOrLoad() {
+        if (!SimpleFile.exists(root + "/" + getConfigName())) {
+            saveConfig();
+            return this;
+        }
+        return reloadConfig();
     }
 }
