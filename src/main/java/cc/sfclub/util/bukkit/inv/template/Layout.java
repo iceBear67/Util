@@ -8,20 +8,19 @@ import org.bukkit.inventory.ItemStack;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 声明一个布局..
+ */
 @RequiredArgsConstructor
 public class Layout {
     private static final int[][] locations = new int[10][9];
-    private static boolean populated = false;
 
     static {
-        if (!populated) {
-            populated = !populated;
-            int i = 0;
-            for (int a = 0; a < 6; a++) {
-                for (int b = 0; b < 9; b++) {
-                    locations[b][a] = i;
-                    i++;
-                }
+        int i = 0;
+        for (int a = 0; a < 6; a++) {
+            for (int b = 0; b < 9; b++) {
+                locations[b][a] = i;
+                i++;
             }
         }
     }
@@ -31,29 +30,70 @@ public class Layout {
     private final Map<Integer, String> elements = new LinkedHashMap<>();
     private final Map<String, ItemStack> elementsToItem = new LinkedHashMap<>();
 
+    /**
+     * 把X Y转换成Bukkit物品栏里的slot
+     *
+     * @param x
+     * @param y
+     * @return slot
+     */
     public static int getIndexFromXY(int x, int y) {
         return locations[x][y];
     }
 
+    /**
+     * 放置元素..
+     *
+     * @param elementName
+     * @param x
+     * @param y
+     * @return
+     */
     public Layout put(String elementName, int x, int y) {
         String location = (y - 1) + String.valueOf(x - 1); //3 3: 22
         elements.put(Integer.parseInt(location), elementName);
         return this;
     }
 
-    public Layout put(String elementName, ItemStack item) {
-        elementsToItem.put(elementName, item);
+    /**
+     * 设置所有匹配到正则表达式的元素为item
+     *
+     * @param regex
+     * @param item
+     * @return
+     */
+    public Layout setAll(String regex, ItemStack item) {
+        elementsToItem.forEach((e, v) -> {
+            if (e.matches(regex)) elementsToItem.put(e, item);
+        });
         return this;
     }
 
+    /**
+     * 从Element获取到槽位上对应的物品
+     *
+     * @param element
+     * @return
+     */
     public ItemStack fromElement(String element) {
         return elementsToItem.get(element);
     }
 
+    /**
+     * 从slot id得到对应的元素
+     *
+     * @param i
+     * @return
+     */
     public String fromIndex(int i) {
         return elements.get(i);
     }
 
+    /**
+     * 应用到物品栏
+     *
+     * @param inventory
+     */
     public void applyTo(Inventory inventory) {
         inventory.clear();
         elements.forEach((i, e) -> inventory.setItem(i, fromElement(e)));

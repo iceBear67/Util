@@ -44,13 +44,7 @@ public class InvBird implements Listener {
             InvHolder invHolder = (InvHolder) evt.getInventory().getHolder();
             if (inventories.containsKey(invHolder.getSign())) {
                 FeatherInv featherInv = inventories.get(invHolder.getSign());
-                featherInv.getPage(invHolder.getPage()).getClick().accept(
-                        Context.builder()
-                                .action(evt.getClick())
-                                .featherInv(featherInv)
-                                .index(evt.getSlot())
-                                .build()
-                );
+                featherInv.getPage(invHolder.getPage()).onClick(evt);
             }
         }
     }

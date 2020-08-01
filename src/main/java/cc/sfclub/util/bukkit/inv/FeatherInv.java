@@ -6,8 +6,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class FeatherInv {
@@ -26,7 +29,7 @@ public class FeatherInv {
     private InvHolder inv;
     private int refreshInterval;
     @Getter(AccessLevel.PROTECTED)
-    private Consumer<Context> click;
+    private final Map<Integer, Consumer<Context>> clickHandlers = new HashMap<>();
     private String title;
 
     protected FeatherInv(Template template, FeatherInv previous, String sign, InvBird invBird) {
@@ -38,7 +41,18 @@ public class FeatherInv {
         last = previous;
     }
 
-    public FeatherInv clickHandler(Consumer<FeatherInv> handler) {
+    public FeatherInv clickHandler(Consumer<Context> handler) {
+        clickHandlers.put(-1, handler);
+        return this;
+    }
+
+    public FeatherInv clickHandler(int itemIndex, Consumer<Context> handler) {
+        clickHandlers.put(itemIndex, handler);
+        return this;
+    }
+
+    public FeatherInv clickHandler(int x, int y, Consumer<Context> handler) {
+        clickHandler(Layout.getIndexFromXY(x, y), handler);
         return this;
     }
 
@@ -123,5 +137,19 @@ public class FeatherInv {
 
     public Layout layout() {
         return layout;
+    }
+
+    public void onClick(InventoryClickEvent event) {
+        Context context = Context.builder()
+                .action(event.getClick())
+                .feather(this)
+                .index(event.getSlot())
+                .clicker((Player) event.getWhoClicked())
+                .build();
+        if (clickHandlers.containsKey(event.getSlot())) {
+            clickHandlers.get(event.getSlot()).accept(context);
+        } else {
+            clickHandlers.get(-1).accept(context);
+        }
     }
 }
