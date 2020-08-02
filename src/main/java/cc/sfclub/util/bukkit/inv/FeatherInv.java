@@ -145,6 +145,7 @@ public class FeatherInv {
                 .feather(this)
                 .index(event.getSlot())
                 .clicker((Player) event.getWhoClicked())
+                .event(event)
                 .build();
         if (clickHandlers.containsKey(event.getSlot())) {
             clickHandlers.get(event.getSlot()).accept(context);

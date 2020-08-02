@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 @Builder
@@ -13,6 +14,7 @@ public class Context {
     private final int index;
     private final FeatherInv feather;
     private final Player clicker;
+    private final InventoryClickEvent event;
 
     public String getClickedElement() {
         return feather.layout().fromIndex(index);
