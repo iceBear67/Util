@@ -96,8 +96,5 @@ public class Layout {
     public void applyTo(Inventory inventory) {
         inventory.clear();
         elements.forEach((i, e) -> inventory.setItem(i, fromElement(e)));
-        for (ItemStack content : inventory.getContents()) {
-            if (content != null) System.out.println(content);
-        }
     }
 }
