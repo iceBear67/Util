@@ -29,18 +29,19 @@ public class InvBird implements Listener {
 
     @EventHandler
     public void onClosing(InventoryCloseEvent evt) {
-        if (evt.getInventory().getHolder() != null || evt.getInventory().getHolder() instanceof InvHolder) {
+        if (evt.getInventory().getHolder() != null && evt.getInventory().getHolder() instanceof InvHolder) {
             InvHolder invHolder = (InvHolder) evt.getInventory().getHolder();
             if (inventories.containsKey(invHolder.getSign())) {
                 FeatherInv featherInv = inventories.get(invHolder.getSign());
-                featherInv.getPage(invHolder.getPage()).getRunningRefresher().cancel();
+                if (featherInv.getPage(invHolder.getPage()).getRunningRefresher() != null)
+                    featherInv.getPage(invHolder.getPage()).getRunningRefresher().cancel();
             }
         }
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent evt) {
-        if (evt.getInventory().getHolder() != null || evt.getInventory().getHolder() instanceof InvHolder) {
+        if (evt.getInventory().getHolder() != null && evt.getInventory().getHolder() instanceof InvHolder) {
             InvHolder invHolder = (InvHolder) evt.getInventory().getHolder();
             if (inventories.containsKey(invHolder.getSign())) {
                 FeatherInv featherInv = inventories.get(invHolder.getSign());

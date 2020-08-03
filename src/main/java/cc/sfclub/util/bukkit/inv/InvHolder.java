@@ -13,7 +13,7 @@ public class InvHolder implements InventoryHolder {
     private final int page;
 
     public InvHolder(String sign, int height, String title, int page) {
-        inventory = Bukkit.createInventory(this, height, title);
+        inventory = Bukkit.createInventory(this, height * 9, title);
         this.page = page;
         this.sign = sign;
     }

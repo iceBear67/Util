@@ -50,8 +50,7 @@ public class Layout {
      * @return
      */
     public Layout put(String elementName, int x, int y) {
-        String location = (y - 1) + String.valueOf(x - 1); //3 3: 22
-        elements.put(Integer.parseInt(location), elementName);
+        elements.put(getIndexFromXY(x, y), elementName);
         return this;
     }
 
@@ -63,8 +62,8 @@ public class Layout {
      * @return
      */
     public Layout setAll(String regex, ItemStack item) {
-        elementsToItem.forEach((e, v) -> {
-            if (e.matches(regex)) elementsToItem.put(e, item);
+        elements.forEach((e, v) -> {
+            if (v.matches(regex)) elementsToItem.put(v, item);
         });
         return this;
     }
@@ -97,5 +96,8 @@ public class Layout {
     public void applyTo(Inventory inventory) {
         inventory.clear();
         elements.forEach((i, e) -> inventory.setItem(i, fromElement(e)));
+        for (ItemStack content : inventory.getContents()) {
+            if (content != null) System.out.println(content);
+        }
     }
 }

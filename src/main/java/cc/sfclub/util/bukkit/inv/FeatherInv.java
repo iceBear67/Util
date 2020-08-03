@@ -37,6 +37,7 @@ public class FeatherInv {
         this.layout = template.layout();
         this.pageNum = 0;
         this.sign = sign;
+        this.title = template.getTitle();
         this.invBird = invBird;
         last = previous;
     }
@@ -103,8 +104,12 @@ public class FeatherInv {
         }
         if (page == this.pageNum) {
             player.openInventory(inv.getInventory());
+            if (refresh == null) return;
             if (runningRefresher == null || runningRefresher.isCancelled()) {
-                runningRefresher = Bukkit.getScheduler().runTaskTimer(invBird.getPlugin(), () -> refresh.accept(this), 0L, refreshInterval * 20L);
+                runningRefresher = Bukkit.getScheduler().runTaskTimer(invBird.getPlugin(), () -> {
+                    refresh.accept(this);
+                    layout.applyTo(inv.getInventory());
+                }, 0L, refreshInterval * 20L);
             }
             return;
         }
@@ -132,7 +137,7 @@ public class FeatherInv {
     private void create() {
         inv = new InvHolder(sign, layout.getHeight(), title, this.pageNum);
         layout.applyTo(inv.getInventory());
-        refresh.accept(this);
+        if (refresh != null) refresh.accept(this);
     }
 
     public Layout layout() {
@@ -150,6 +155,7 @@ public class FeatherInv {
         if (clickHandlers.containsKey(event.getSlot())) {
             clickHandlers.get(event.getSlot()).accept(context);
         } else {
+            if (!clickHandlers.containsKey(-1)) return;
             clickHandlers.get(-1).accept(context);
         }
     }

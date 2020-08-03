@@ -12,8 +12,17 @@ public class Template {
         this.layout = new Layout(line);
     }
 
+    private Template(String title, Layout layout) {
+        this.title = title;
+        this.layout = layout;
+    }
+
     public static Template build(String title, int line) {
         return new Template(title, line);
+    }
+
+    public static Template build(String title, Layout layout) {
+        return new Template(title, layout);
     }
 
     public Layout layout() {
